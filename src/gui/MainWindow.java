@@ -130,37 +130,37 @@ public class MainWindow extends JFrame{
     
     private void assembleFlagsLabel() {
         String labelText = "<HTML>FLAGS: ";
-        if(machine.getProcessorFlags(machine.NEGATIVE_FLAG)) {
+        if(machine.getFlags(machine.NEGATIVE_FLAG)) {
             labelText += "<font color='red'>N</font>";
         } else {
             labelText += "N";
         }
-        if(machine.getProcessorFlags(machine.OVERFLOW_FLAG)) {
+        if(machine.getFlags(machine.OVERFLOW_FLAG)) {
             labelText += "<font color='red'>V</font>";
         } else {
             labelText += "V";
         }
-        if(machine.getProcessorFlags(machine.BREAK_FLAG)) {
+        if(machine.getFlags(machine.BREAK_FLAG)) {
             labelText += "-<font color='red'>B</font>";
         } else {
             labelText += "-B";
         }
-        if(machine.getProcessorFlags(machine.DECIMAL_FLAG)) {
+        if(machine.getFlags(machine.DECIMAL_FLAG)) {
             labelText += "<font color='red'>D</font>";
         } else {
             labelText += "D";
         }
-        if(machine.getProcessorFlags(machine.INTERUPT_FLAG)) {
+        if(machine.getFlags(machine.INTERUPT_FLAG)) {
             labelText += "<font color='red'>I</font>";
         } else {
             labelText += "I";
         }
-        if(machine.getProcessorFlags(machine.ZERO_FLAG)) {
+        if(machine.getFlags(machine.ZERO_FLAG)) {
             labelText += "<font color='red'>Z</font>";
         } else {
             labelText += "Z";
         }
-        if(machine.getProcessorFlags(machine.CARRY_FLAG)) {
+        if(machine.getFlags(machine.CARRY_FLAG)) {
             labelText += "<font color='red'>C</font>";
         } else {
             labelText += "C";
