@@ -1,16 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package Machine;
+package machine;
 
 import java.io.FileInputStream;
 
-/**
- *
- * @author Yves Bodê
- */
+import testing.VisibleForTesting;
+
 public class Mpu {
 
     public Mpu(int resetVector) {
@@ -31,13 +24,13 @@ public class Mpu {
     private static int AM_ABSOLUTE_Y        = 3;
     private static int AM_IMMEDIATE         = 4;
 //    private static int AM_IMPLIED           = 5;
-    private static int AM_INDIRECT          = 6;
+//    private static int AM_INDIRECT          = 6;
     private static int AM_INDEXED_INDIRECT  = 7;
     private static int AM_INDIRECT_INDEXED  = 8;
 //    private static int AM_REALATIVE         = 9;
     private static int AM_ZEROPAGE          = 10;
     private static int AM_ZEROPAGE_X        = 11;
-    private static int AM_ZEROPAGE_Y        = 12;
+//    private static int AM_ZEROPAGE_Y        = 12;
     
     public final int NEGATIVE_FLAG = 0;
     public final int OVERFLOW_FLAG = 1;
@@ -53,7 +46,7 @@ public class Mpu {
     private int Xcc;
     private int Ycc;
     private int processorFlags;
-    private int stackPointer;
+//    private int stackPointer;
     private int programCounter;
     private int[] memStream;
     private int[] addressStream;
@@ -82,67 +75,73 @@ public class Mpu {
         addressStream[1] = this.programCounter + 1;
         addressStream[2] = this.programCounter + 2;
         
-        switch(memStream[0]) {
-            default:
-                programCounter += 1;
-                break;
-            //ADC immediate mode
-            case 0x69:
-                this.Acc += memoryArray[this.getOperandAddress(AM_IMMEDIATE)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 2;
-                break;
-            //ADC zeropage mode
-            case 0x65:
-                this.Acc += memoryArray[this.getOperandAddress(AM_ZEROPAGE)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 2;
-                break;
-            //ADC zeropage X-indexed
-            case 0x75:
-                this.Acc += memoryArray[this.getOperandAddress(AM_ZEROPAGE_X)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 2;
-                break;
-            //ADC absolute
-            case 0x6D:
-                this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 3;
-                break;
-            //ADC absolute X-indexed
-            case 0x7D:
-                this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE_X)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 3;
-                break;
-            //ADC absolute Y-indexed
-            case 0x79:
-                this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE_Y)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 3;
-                break;
-            //ADC indirect indexed
-            case 0x61:
-                this.Acc += memoryArray[this.getOperandAddress(AM_INDIRECT_INDEXED)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 2;
-                break;
-            //ADC indexed indirect
-            case 0x71:
-                this.Acc += memoryArray[this.getOperandAddress(AM_INDEXED_INDIRECT)];
-                if (this.getProcessorFlags(this.CARRY_FLAG))
-                    this.Acc += 1;
-                programCounter += 2;
-                break;
-        }
+        evaluateOpCode(memStream[0]);
+        
+    }
+    
+    @VisibleForTesting
+    public void evaluateOpCode(int opCode) {
+    	switch(memStream[0]) {
+        default:
+            programCounter += 1;
+            break;
+        //ADC immediate mode
+        case 0x69:
+            this.Acc += memoryArray[this.getOperandAddress(AM_IMMEDIATE)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 2;
+            break;
+        //ADC zeropage mode
+        case 0x65:
+            this.Acc += memoryArray[this.getOperandAddress(AM_ZEROPAGE)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 2;
+            break;
+        //ADC zeropage X-indexed
+        case 0x75:
+            this.Acc += memoryArray[this.getOperandAddress(AM_ZEROPAGE_X)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 2;
+            break;
+        //ADC absolute
+        case 0x6D:
+            this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 3;
+            break;
+        //ADC absolute X-indexed
+        case 0x7D:
+            this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE_X)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 3;
+            break;
+        //ADC absolute Y-indexed
+        case 0x79:
+            this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE_Y)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 3;
+            break;
+        //ADC indirect indexed
+        case 0x61:
+            this.Acc += memoryArray[this.getOperandAddress(AM_INDIRECT_INDEXED)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 2;
+            break;
+        //ADC indexed indirect
+        case 0x71:
+            this.Acc += memoryArray[this.getOperandAddress(AM_INDEXED_INDIRECT)];
+            if (this.getProcessorFlags(this.CARRY_FLAG))
+                this.Acc += 1;
+            programCounter += 2;
+            break;
+    	}
     }
     
     //Returns the address of an operand of an instruction, given the current program counter and the address mode

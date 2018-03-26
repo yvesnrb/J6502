@@ -1,6 +1,5 @@
-package Gui;
+package gui;
 
-import Machine.Mpu;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -13,15 +12,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Yves Bodê
- */
+import machine.Mpu;
+
 public class MainWindow extends JFrame{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -2542455248044922069L;
 
 	public MainWindow(Mpu machine) {
@@ -63,31 +57,9 @@ public class MainWindow extends JFrame{
     JLabel FlagsLabel = new JLabel();
     
     public void display() {
-        this.setLayout(mainWindowLayout);
-        lowerPanel.setLayout(lowerPanelLayout);
-        lowerLeftPanel.setLayout(lowerLeftLayout);
-        lowerRightPanel.setLayout(lowerRightLayout);
-        
-        PCLabel.setFont(lowerLabelFont);
-        ACCLabel.setFont(lowerLabelFont);
-        XCCLabel.setFont(lowerLabelFont);
-        YCCLabel.setFont(lowerLabelFont);
-        FlagsLabel.setFont(lowerLabelFont);
-        
-        memoryPanel.setFont(memoryMonitorFont);
-        memoryPanel.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-      
-//        middlePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN));
-//        lowerPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-//        lowerLeftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//        lowerRightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-        this.stepButton.addActionListener(e -> this.stepButtonListener());
-        this.nextPageButton.addActionListener(e -> this.nextPageButtonListener());
-        this.nextPageX5Button.addActionListener(e -> this.nextPageButton5XListener());
-        this.previousPageButton.addActionListener(e -> this.previousPageButtonListener());
-        this.previousPageX5Button.addActionListener(e -> this.previousPageButton5XListener());
-        
+        this.setLayouts();
+        this.setFonts();
+        this.addActionListeners();
         this.addItens();
         this.populateLowerLabels();
         this.populateMemoryMonitor();
@@ -95,6 +67,32 @@ public class MainWindow extends JFrame{
         this.setTitle("J6502 v0.0");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+    }
+    
+    private void addActionListeners() {
+    	this.stepButton.addActionListener(e -> this.stepButtonListener());
+        this.nextPageButton.addActionListener(e -> this.nextPageButtonListener());
+        this.nextPageX5Button.addActionListener(e -> this.nextPageButton5XListener());
+        this.previousPageButton.addActionListener(e -> this.previousPageButtonListener());
+        this.previousPageX5Button.addActionListener(e -> this.previousPageButton5XListener());
+    }
+    
+    private void setFonts() {
+    	PCLabel.setFont(lowerLabelFont);
+        ACCLabel.setFont(lowerLabelFont);
+        XCCLabel.setFont(lowerLabelFont);
+        YCCLabel.setFont(lowerLabelFont);
+        FlagsLabel.setFont(lowerLabelFont);
+        
+        memoryPanel.setFont(memoryMonitorFont);
+        memoryPanel.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+    }
+    
+    private void setLayouts() {
+    	this.setLayout(mainWindowLayout);
+        lowerPanel.setLayout(lowerPanelLayout);
+        lowerLeftPanel.setLayout(lowerLeftLayout);
+        lowerRightPanel.setLayout(lowerRightLayout);
     }
     
     private void addItens() {
