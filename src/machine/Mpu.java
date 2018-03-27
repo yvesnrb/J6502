@@ -136,6 +136,10 @@ public class Mpu {
 	            this.Acc += memoryArray[this.getOperandAddress(AM_ZEROPAGE_X)];
 	            if (this.getFlags(this.CARRY_FLAG))
 	                this.Acc += 1;
+	            if (this.Acc > 0xFF) {
+	            	this.Acc -= 0xFF;
+	            	this.setFlags(CARRY_FLAG);
+	            }
 	            programCounter += 2;
 	            break;
 	        //ADC absolute
@@ -143,6 +147,10 @@ public class Mpu {
 	            this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE)];
 	            if (this.getFlags(this.CARRY_FLAG))
 	                this.Acc += 1;
+	            if (this.Acc > 0xFF) {
+	            	this.Acc -= 0xFF;
+	            	this.setFlags(CARRY_FLAG);
+	            }
 	            programCounter += 3;
 	            break;
 	        //ADC absolute X-indexed
@@ -150,6 +158,10 @@ public class Mpu {
 	            this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE_X)];
 	            if (this.getFlags(this.CARRY_FLAG))
 	                this.Acc += 1;
+	            if (this.Acc > 0xFF) {
+	            	this.Acc -= 0xFF;
+	            	this.setFlags(CARRY_FLAG);
+	            }
 	            programCounter += 3;
 	            break;
 	        //ADC absolute Y-indexed
@@ -157,20 +169,32 @@ public class Mpu {
 	            this.Acc += memoryArray[this.getOperandAddress(AM_ABSOLUTE_Y)];
 	            if (this.getFlags(this.CARRY_FLAG))
 	                this.Acc += 1;
+	            if (this.Acc > 0xFF) {
+	            	this.Acc -= 0xFF;
+	            	this.setFlags(CARRY_FLAG);
+	            }
 	            programCounter += 3;
 	            break;
-	        //ADC indirect indexed
-	        case 0x61:
-	            this.Acc += memoryArray[this.getOperandAddress(AM_INDIRECT_INDEXED)];
-	            if (this.getFlags(this.CARRY_FLAG))
-	                this.Acc += 1;
-	            programCounter += 2;
-	            break;
 	        //ADC indexed indirect
-	        case 0x71:
+	        case 0x61:
 	            this.Acc += memoryArray[this.getOperandAddress(AM_INDEXED_INDIRECT)];
 	            if (this.getFlags(this.CARRY_FLAG))
 	                this.Acc += 1;
+	            if (this.Acc > 0xFF) {
+	            	this.Acc -= 0xFF;
+	            	this.setFlags(CARRY_FLAG);
+	            }
+	            programCounter += 2;
+	            break;
+	        //ADC indirect indexed
+	        case 0x71:
+	            this.Acc += memoryArray[this.getOperandAddress(AM_INDIRECT_INDEXED)];
+	            if (this.getFlags(this.CARRY_FLAG))
+	                this.Acc += 1;
+	            if (this.Acc > 0xFF) {
+	            	this.Acc -= 0xFF;
+	            	this.setFlags(CARRY_FLAG);
+	            }
 	            programCounter += 2;
 	            break;
     	}
@@ -221,16 +245,16 @@ public class Mpu {
                 return indexedAddress;
             //Zero-page mode
             case 10:
-                indexedAddress = memStream[1] * 0x0100;
+                indexedAddress = memStream[1] + 0x100;
                 return indexedAddress;
             //Zero-page X-indexed mode
             case 11:
-                indexedAddress = memStream[1] * 0x100;
+                indexedAddress = memStream[1] + 0x100;
                 indexedAddress += this.Xcc;
                 return indexedAddress;
             //Zero page Y-indexed mode
             case 12:
-                indexedAddress = memStream[1] * 0x100;
+                indexedAddress = memStream[1] + 0x100;
                 indexedAddress += this.Ycc;
                 return indexedAddress;
         }
@@ -330,6 +354,10 @@ public class Mpu {
                 return false;
         }
         return false;
+    }
+    
+    public void resetFlags() {
+    	this.processorFlags = 0;
     }
     
     public int getProgramCounter() {
